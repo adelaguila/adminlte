@@ -1,0 +1,67 @@
+<div class="card">
+  <div class="card-header">
+    <!-- <h3 class="card-title">DataTable with default features</h3> -->
+    <button type="button" [routerLink]="['/clientes/formulario']" class="btn bg-gradient-primary btn-sm mr-1">
+      <i class="fas fa-plus"></i>
+      Crear
+    </button>
+    <button type="button" (click)="editar()" class="btn bg-gradient-success btn-sm mr-1">
+      <i class="fas fa-edit"></i>
+      Editar
+    </button>
+    <button type="button" (click)="delete()" class="btn bg-gradient-danger btn-sm mr-1">
+      <i class="fas fa-trash-alt"></i>
+      Eliminar
+    </button>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <p-table #dt class="table table-condencer"
+      [columns]="cols"
+      [value]="clientes"
+      selectionMode="single"
+      [(selection)]="selectedCliente" dataKey="id"
+      [lazy]="true"
+      (onLazyLoad)="loadClientesLazy($event)"
+      [paginator]="true" [rows]="10"
+      [rowsPerPageOptions]="[10,20,30]"
+      [totalRecords]="totalRecords"
+      [loading]="loading"
+      [resizableColumns]="true"
+      (onRowSelect)="onRowSelect($event)">
+
+      <ng-template pTemplate="colgroup" let-cols>
+        <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+    </ng-template>
+      <ng-template pTemplate="header" let-cols>
+        <tr>
+          <th *ngFor="let col of cols" [pSortableColumn]="col.field" pResizableColumn>
+            {{col.header}}
+            <p-sortIcon [field]="col.field" ariaLabel="Activate to sort"
+              ariaLabelDesc="Activate to sort in descending order" ariaLabelAsc="Activate to sort in ascending order">
+            </p-sortIcon>
+          </th>
+        </tr>
+        <tr>
+          <th *ngFor="let col of cols" [ngSwitch]="col.field">
+              <input class="form-control form-control-sm" *ngSwitchCase="'id'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+              <input class="form-control form-control-sm" *ngSwitchCase="'nombre'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+              <input class="form-control form-control-sm" *ngSwitchCase="'apellido'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+              <input class="form-control form-control-sm" *ngSwitchCase="'email'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+          </th>
+      </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="cols">
+        <tr [pSelectableRow]="rowData">
+          <td *ngFor="let col of cols" class="ui-resizable-column">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <!-- <p-paginator [rows]="10" [totalRecords]="120" [rowsPerPageOptions]="[10,20,30]"></p-paginator> -->
+  </div>
+  <!-- /.card-body -->
+</div>
